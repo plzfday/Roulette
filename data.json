@@ -1,0 +1,13 @@
+{
+    "users": [
+        {
+            "name": "jeff",
+            "password": "123",
+            "balance": 90,
+            "record": [
+                []
+            ]
+        }
+    ],
+    "isLocked": false
+}
