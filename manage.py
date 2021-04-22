@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from static_text import RECORD
 from utility import colored_print
@@ -19,7 +20,7 @@ class User:
     def __init__(self, name="", balance=DEFAULT_BALANCE):
         self.name = name
         self.balance = balance
-        self.record = []
+        self.record = []  # DateTime/Username/Game/Win or Lose/balance
 
     def is_online(self) -> bool:
         return self.name != ""
@@ -32,7 +33,16 @@ class User:
         print("Username: ", end='')
         colored_print(self.name, (66, 245, 212))
         print(f"Balance: {self.balance}")
-
+        print("Log:")
+        print("{:<26} {:<15} {:<10} {:<10}".format('Date', 'Game', 'Result', 'Balance'))
+        with open(DEFAULT_DATA_FILE, "r") as f:
+            data = json.load(f)
+            for user in data['users']:
+                if user['name'] == self.name:
+                    for i in user['record']:
+                        print("{:<26} {:<15} {:<10} {:<10}".format(i[0], i[1], i[2], i[3]))
+        for i in self.record:
+            print("{:<26} {:<15} {:<10} {:<10}".format(i[0], i[1], i[2], i[3]))
         input()
 
 
@@ -130,9 +140,9 @@ def signup() -> User:
 
 def update_balance(manager: Manager, multiplier: int) -> int:
     manager.user.balance += DEFAULT_BET * multiplier
-    if manager.user.balance == 0:
-        colored_print("Sorry. You don't have enough money. Please top up.", (255, 0, 0))
-        input()
+    # if manager.user.balance == 0:
+    #     colored_print("Sorry. You don't have enough money. Please top up.", (255, 0, 0))
+    #     input()
     return manager.user.balance
 
 
@@ -143,7 +153,8 @@ def save(manager: Manager):
         if user['name'] == manager.user.name:
             user['balance'] = manager.user.balance
             if manager.user.record:
-                user['record'].append(manager.user.record)
+                for i in manager.user.record:
+                    user['record'].append(i)
             break
     data['isLocked'] = manager.locked
     with open(DEFAULT_DATA_FILE, "w") as f:
@@ -165,3 +176,8 @@ def unlock_machine(manager: Manager):
     manager.login_trial = 0
     with open(DEFAULT_DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
+
+
+def log(user: User, game: str, outcome: str):
+    current_time = datetime.now()
+    user.record.append([current_time.strftime("%c"), game, outcome, user.balance])
