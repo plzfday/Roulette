@@ -46,7 +46,7 @@ def menu(manager: Manager):
         if menu_num == "1":
             return login(manager)
         elif menu_num == "2":
-            return signup()
+            signup(manager)
         elif menu_num == "Q" or menu_num == "q":
             sys.exit()
         else:
@@ -58,7 +58,7 @@ def disclaimer(manager: Manager) -> bool:
     colored_print("You are more likely to lose your money and the odds are against you.", (255, 0, 0))
     colored_print("You must agree that you're taking a risk.", (255, 0, 0))
     colored_print('Please type "AGREE" if you agree and want to continue.', (255, 0, 0))
-    agreement = colored_input((0, 0, 255))
+    agreement = colored_input((255, 255, 0))
     if agreement != "AGREE":
         colored_print("Since you didn't agree with this disclaimer, you're redirected to the main.", (66, 245, 212))
         input()

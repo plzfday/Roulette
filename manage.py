@@ -1,8 +1,9 @@
 import json
 from datetime import datetime
 
+from manage_data import sort_name, find_user
 from static_text import RECORD
-from utility import colored_print
+from utility import colored_print, change_background_color
 
 DEFAULT_JSON_FORMAT = {
     "users": [
@@ -33,16 +34,42 @@ class User:
         print("Username: ", end='')
         colored_print(self.name, (66, 245, 212))
         print(f"Balance: {self.balance}")
-        print("Log:")
-        print("{:<26} {:<15} {:<10} {:<10}".format('Date', 'Game', 'Result', 'Balance'))
+
+        display_list = []
+        count_victory = 0
+        count_defeat = 0
+
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
-            for user in data['users']:
-                if user['name'] == self.name:
-                    for i in user['record']:
-                        print("{:<26} {:<15} {:<10} {:<10}".format(i[0], i[1], i[2], i[3]))
+            index = find_user(data['users'], self.name)
+            if index != -1:
+                for i in data['users'][index]['record']:
+                    display_list.append(i)
+                    if i[2] == 'W':
+                        count_victory += 1
+                    elif i[2] == 'L':
+                        count_defeat += 1
+
         for i in self.record:
-            print("{:<26} {:<15} {:<10} {:<10}".format(i[0], i[1], i[2], i[3]))
+            display_list.append(i)
+            if i[2] == 'W':
+                count_victory += 1
+            elif i[2] == 'L':
+                count_defeat += 1
+
+        count_games = len(display_list)
+        if count_games > 0:
+            print(
+                f"Total {count_games}G {count_victory}W {count_defeat}L ({round(count_victory / count_games * 100, 2)}%)")
+            print("{:<26} {:<15} {:<10} {:<7}".format('Date', 'Game', 'Result', 'Balance'))
+            for i in display_list:
+                if i[2] == 'W':
+                    change_background_color((31, 142, 205))
+                elif i[2] == 'L':
+                    change_background_color((238, 90, 82))
+                print("{:<26} {:<15} {:<10} {:<7}\033[0m".format(i[0], i[1], i[2], i[3]))
+        else:
+            print("There are no results recorded.")
         input()
 
 
@@ -75,15 +102,13 @@ def login(manager: Manager):
     try:
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
-            found_user = False
-            for user in data['users']:
-                if user['name'] == username and user['password'] == password:
-                    colored_print(f"Welcome, {username}", (66, 245, 212))
-                    manager.user = User(username, user['balance'])
-                    found_user = True
-                    manager.login_trial = 0
-                    break
-            if not found_user:
+
+            index = find_user(data['users'], username)
+            if index != -1 and data['users'][index]['password'] == password:
+                colored_print(f"Welcome, {username}", (66, 245, 212))
+                manager.user = User(username, data['users'][index]['balance'])
+                manager.login_trial = 0
+            else:
                 manager.login_trial += 1
                 if manager.login_trial > 2:
                     colored_print("[MACHINE LOCKED] Please contact an administrator to unlock the machine.",
@@ -105,10 +130,20 @@ def logout(manager: Manager):
     manager.user = User()
 
 
-def signup() -> User:
+def signup(manager: Manager):
     # Sign Up UI
     colored_print("? ", (0, 255, 0), end='')
     username = input("Username: ")
+    try:
+        with open(DEFAULT_DATA_FILE, "r") as f:
+            data = json.load(f)
+            if find_user(data['users'], username) != -1:
+                colored_print("[The name is already taken]", (255, 0, 0))
+                colored_print("? ", (0, 255, 0), end='')
+                username = input("Username: ")
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+
     colored_print("? ", (0, 255, 0), end='')
     password1 = input("Password: ")
     colored_print("? ", (0, 255, 0), end='')
@@ -132,6 +167,8 @@ def signup() -> User:
     }
     data['users'].append(info)
 
+    sort_name(data['users'])
+
     with open(DEFAULT_DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
 
@@ -140,22 +177,19 @@ def signup() -> User:
 
 def update_balance(manager: Manager, multiplier: int) -> int:
     manager.user.balance += DEFAULT_BET * multiplier
-    # if manager.user.balance == 0:
-    #     colored_print("Sorry. You don't have enough money. Please top up.", (255, 0, 0))
-    #     input()
     return manager.user.balance
 
 
 def save(manager: Manager):
     with open(DEFAULT_DATA_FILE, "r") as f:
         data = json.load(f)
-    for user in data['users']:
-        if user['name'] == manager.user.name:
-            user['balance'] = manager.user.balance
-            if manager.user.record:
-                for i in manager.user.record:
-                    user['record'].append(i)
-            break
+
+    index = find_user(data['users'], manager.user.name)
+    if index != -1:
+        data['users'][index]['balance'] = manager.user.balance
+        if manager.user.record:
+            for i in manager.user.record:
+                data['users'][index]['record'].append(i)
     data['isLocked'] = manager.locked
     with open(DEFAULT_DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
