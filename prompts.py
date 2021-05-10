@@ -1,13 +1,10 @@
 import sys
-
 from getpass import getpass
 
 from games import *
-from manage import login, logout, signup, save, unlock_machine
-from static_text import ROULETTE, DISCLAIMER, SELECT_MODE, LOCKED
+from statics import MASTER_PASSWORD, ROULETTE, DISCLAIMER, SELECT_MODE, LOCKED
 from utility import *
-
-MASTER_PASSWORD = "ABCDEFG"
+from manager import Manager, signup
 
 
 def menu(manager: Manager):
@@ -32,9 +29,9 @@ def menu(manager: Manager):
         elif menu_num == "2":
             manager.user.display_record()
         elif menu_num == "3":
-            logout(manager)
+            manager.logout()
         elif menu_num == "Q" or menu_num == "q":
-            save(manager)
+            manager.save()
             sys.exit()
         else:
             colored_print("Please Type Correctly", (255, 0, 0))
@@ -46,9 +43,9 @@ def menu(manager: Manager):
         menu_num = colored_input((0, 255, 0))
 
         if menu_num == "1":
-            return login(manager)
+            return manager.login()
         elif menu_num == "2":
-            signup(manager)
+            signup()
         elif menu_num == "Q" or menu_num == "q":
             sys.exit()
         else:
@@ -103,6 +100,6 @@ def select_mode(manager: Manager):
 def master_key(manager: Manager) -> bool:
     password = getpass("Master Key: ")
     if MASTER_PASSWORD == password:
-        unlock_machine(manager)
+        manager.unlock_machine()
         return True
     return False

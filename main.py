@@ -1,13 +1,13 @@
-from manage import init
-from prompts import menu
-
 import os
 
-# TODO 전적 보여주기 - Pagination 설정
-# TODO 주석 달기
+from manager import Manager
+from prompts import menu
+
+# TODO Comment
+# TODO index != -1에서 Valid로 바꾸기
 
 if __name__ == '__main__':
     os.system('')
-    manager = init()
+    manager = Manager()
     while True:
         menu(manager)

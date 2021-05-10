@@ -1,7 +1,7 @@
 from random import randint
 
-from manage import Manager, update_balance, log
-from static_text import GUESS_WHAT, ODD_OR_EVEN, GUESS_RANGE
+from manager import Manager
+from statics import GUESS_WHAT, ODD_OR_EVEN, GUESS_RANGE
 from utility import *
 
 
@@ -15,12 +15,12 @@ def choose_one(manager: Manager):
         guess = int(colored_input((0, 255, 0)))
     if random_num == guess:
         colored_print("Congratulations! You've got it right and earned £360.", (66, 245, 212))
-        update_balance(manager, 35)
-        log(manager.user, "Choose One", "W")
+        manager.update_balance(35)
+        manager.log("Choose One", "W")
     else:
         colored_print("Unfortunately, you've got it wrong. You've lost £10.", (66, 245, 212))
-        update_balance(manager, -1)
-        log(manager.user, "Choose One", "L")
+        manager.update_balance(-1)
+        manager.log("Choose One", "L")
 
 
 def odd_even(manager: Manager):
@@ -35,12 +35,12 @@ def odd_even(manager: Manager):
 
     if (guess == "1" and random_num % 2 == 1) or (guess == "2" and random_num % 2 == 0):
         colored_print("Congratulations! You've got it right and earned £20.", (66, 245, 212))
-        update_balance(manager, 1)
-        log(manager.user, "Odd or Even", "W")
+        manager.update_balance(1)
+        manager.log("Odd or Even", "W")
     else:
         colored_print("Unfortunately, you've got it wrong. You've lost £10.", (66, 245, 212))
-        update_balance(manager, -1)
-        log(manager.user, "Odd or Even", "L")
+        manager.update_balance(-1)
+        manager.log("Odd or Even", "L")
 
 
 def up_down(manager: Manager):
@@ -55,9 +55,9 @@ def up_down(manager: Manager):
 
     if (guess == "1" and random_num <= 18) or (guess == "2" and 19 <= random_num):
         colored_print("Congratulations! You've got it right and earned £20.", (66, 245, 212))
-        update_balance(manager, 1)
-        log(manager.user, "Guess Range", "W")
+        manager.update_balance(1)
+        manager.log("Guess Range", "W")
     else:
         colored_print("Unfortunately, you've got it wrong. You've lost £10.", (66, 245, 212))
-        update_balance(manager, -1)
-        log(manager.user, "Guess Range", "L")
+        manager.update_balance(-1)
+        manager.log("Guess Range", "L")

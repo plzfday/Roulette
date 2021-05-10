@@ -1,3 +1,15 @@
+DEFAULT_BALANCE = 100
+DEFAULT_BET = 10
+DEFAULT_DATA_FILE = "data.json"
+DEFAULT_JSON_FORMAT = {
+    "users": [
+
+    ],
+    "isLocked": False
+}
+
+MASTER_PASSWORD = "ABCDEFG"
+
 ROULETTE = """
 ______            _      _   _       
 | ___ \          | |    | | | |      
