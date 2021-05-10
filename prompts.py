@@ -34,7 +34,7 @@ def menu(manager: Manager):
             manager.save()
             sys.exit()
         else:
-            colored_print("Please Type Correctly", (255, 0, 0))
+            system_notification("Please Type Correctly", (255, 0, 0))
     else:
         print("1. Sign In")
         print("2. Create an Account")
@@ -49,7 +49,7 @@ def menu(manager: Manager):
         elif menu_num == "Q" or menu_num == "q":
             sys.exit()
         else:
-            colored_print("Please Type Correctly", (255, 0, 0))
+            system_notification("Please Type Correctly", (255, 0, 0))
 
 
 def disclaimer(manager: Manager) -> bool:
@@ -59,8 +59,7 @@ def disclaimer(manager: Manager) -> bool:
     colored_print('Please type "AGREE" if you agree and want to continue.', (255, 0, 0))
     agreement = colored_input((255, 255, 0))
     if agreement != "AGREE":
-        colored_print("Since you didn't agree with this disclaimer, you're redirected to the main.", (66, 245, 212))
-        input()
+        system_notification("Since you didn't agree with this disclaimer, you're redirected to the main.", (66, 245, 212))
         return False
     manager.agree = True
     return True
@@ -72,8 +71,7 @@ def select_mode(manager: Manager):
 
     while True:
         if not manager.user.is_affordable():
-            colored_print("Sorry. You don't have enough money. Please top up.", (255, 0, 0))
-            input()
+            system_notification("Sorry. You don't have enough money. Please top up.", (255, 0, 0))
             break
 
         print(SELECT_MODE)

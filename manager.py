@@ -2,11 +2,11 @@ import json
 from datetime import datetime
 from getpass import getpass
 
-from hash import check_hash, hash_password
 from data_manipulation import sort_name, find_user
+from hash import check_hash, hash_password
 from static_data import DEFAULT_DATA_FILE, DEFAULT_BALANCE, DEFAULT_BET, DEFAULT_JSON_FORMAT
 from user import User
-from utility import colored_print
+from utility import system_notification
 
 
 def signup():
@@ -16,7 +16,7 @@ def signup():
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
             if find_user(data['users'], username) != -1:
-                colored_print("[The name is already taken]", (255, 0, 0))
+                system_notification("[The name is already taken]", (255, 0, 0))
                 username = input("Username: ")
     except (FileNotFoundError, json.JSONDecodeError):
         pass
@@ -48,7 +48,7 @@ def signup():
     with open(DEFAULT_DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
 
-    colored_print(f"Welcome to the Roulette World, {username}!", (66, 245, 212))
+    system_notification(f"Welcome to the Roulette World, {username}!", (66, 245, 212))
 
 
 class Manager:
@@ -74,22 +74,22 @@ class Manager:
                 data = json.load(f)
                 index = find_user(data['users'], username)
                 if index != -1 and check_hash(data['users'][index]['password'], password):
-                    colored_print(f"Welcome, {username}", (66, 245, 212))
+                    system_notification(f"Welcome, {username}", (66, 245, 212))
                     self.user = User(username, data['users'][index]['balance'], index)
                     self.login_trial = 0
                 else:
                     self.login_trial += 1
                     if self.login_trial > 2:
-                        colored_print("[MACHINE LOCKED] Please contact an administrator to unlock the machine.",
-                                      (255, 0, 0))
+                        system_notification("[MACHINE LOCKED] Please contact an administrator to unlock the machine.",
+                                            (255, 0, 0))
                         self.lock_machine()
                     else:
-                        colored_print(f"Username or Password is incorrect.\n"
-                                      f"You can try {3 - self.login_trial} time(s) more.", (66, 245, 212))
+                        system_notification(f"Username or Password is incorrect.\n"
+                                            f"You can try {3 - self.login_trial} time(s) more.", (66, 245, 212))
         except FileNotFoundError:
-            colored_print("There is no registered user. Please sign up first.", (255, 0, 0))
+            system_notification("There is no registered user. Please sign up first.", (255, 0, 0))
         except json.JSONDecodeError:
-            colored_print("ERROR(login-file is unstable)", (255, 0, 0))
+            system_notification("ERROR(login-file is unstable)", (255, 0, 0))
 
     def logout(self):
         self.save()

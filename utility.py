@@ -21,3 +21,8 @@ def colored_input(rgb: (int, int, int)) -> str:
     ret = input("> ")
     reset_color()
     return ret
+
+
+def system_notification(text: str, rgb: (int, int, int)):
+    colored_print(text, rgb)
+    input()
