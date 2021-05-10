@@ -1,9 +1,11 @@
 import json
 from datetime import datetime
+from getpass import getpass
 
 from manage_data import sort_name, find_user
 from static_text import RECORD
 from utility import colored_print, change_background_color
+from hash import *
 
 DEFAULT_JSON_FORMAT = {
     "users": [
@@ -18,10 +20,11 @@ DEFAULT_DATA_FILE = "data.json"
 
 class User:
     # TODO add recent login log to control the number of login trial
-    def __init__(self, name="", balance=DEFAULT_BALANCE):
+    def __init__(self, name="", balance=DEFAULT_BALANCE, index=-1):
         self.name = name
         self.balance = balance
         self.record = []  # DateTime/Username/Game/Win or Lose/balance
+        self.data_index = index
 
     def is_online(self) -> bool:
         return self.name != ""
@@ -41,9 +44,8 @@ class User:
 
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
-            index = find_user(data['users'], self.name)
-            if index != -1:
-                for i in data['users'][index]['record']:
+            if self.data_index != -1:
+                for i in data['users'][self.data_index]['record']:
                     display_list.append(i)
                     if i[2] == 'W':
                         count_victory += 1
@@ -62,7 +64,7 @@ class User:
             print(
                 f"Total {count_games}G {count_victory}W {count_defeat}L ({round(count_victory / count_games * 100, 2)}%)")
             print("{:<26} {:<15} {:<10} {:<7}".format('Date', 'Game', 'Result', 'Balance'))
-            for i in display_list:
+            for i in display_list[::-1]:
                 if i[2] == 'W':
                     change_background_color((31, 142, 205))
                 elif i[2] == 'L':
@@ -94,19 +96,16 @@ def init() -> Manager:
 
 def login(manager: Manager):
     # Login UI
-    colored_print("? ", (0, 255, 0), end='')
     username = input("Username: ")
-    colored_print("? ", (0, 255, 0), end='')
-    password = input("Password: ")
+    password = getpass()
     # Find User
     try:
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
-
             index = find_user(data['users'], username)
-            if index != -1 and data['users'][index]['password'] == password:
+            if index != -1 and check_hash(data['users'][index]['password'], password):
                 colored_print(f"Welcome, {username}", (66, 245, 212))
-                manager.user = User(username, data['users'][index]['balance'])
+                manager.user = User(username, data['users'][index]['balance'], index)
                 manager.login_trial = 0
             else:
                 manager.login_trial += 1
@@ -132,25 +131,22 @@ def logout(manager: Manager):
 
 def signup(manager: Manager):
     # Sign Up UI
-    colored_print("? ", (0, 255, 0), end='')
     username = input("Username: ")
     try:
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
             if find_user(data['users'], username) != -1:
                 colored_print("[The name is already taken]", (255, 0, 0))
-                colored_print("? ", (0, 255, 0), end='')
                 username = input("Username: ")
     except (FileNotFoundError, json.JSONDecodeError):
         pass
 
-    colored_print("? ", (0, 255, 0), end='')
-    password1 = input("Password: ")
-    colored_print("? ", (0, 255, 0), end='')
-    password2 = input("Confirm Password: ")
+    password1 = getpass("Password: ")
+    password2 = getpass("Confirm Password: ")
     while password1 != password2:
-        colored_print("? ", (0, 255, 0), end='')
         password2 = input("[Doesn't Match] Confirm Password: ")
+
+    password = hash_password(password1)
 
     # Load data file and append information of the newcomer.
     try:
@@ -161,7 +157,7 @@ def signup(manager: Manager):
 
     info = {
         "name": username,
-        "password": password1,
+        "password": password,
         "balance": DEFAULT_BALANCE,
         "record": []
     }
@@ -184,12 +180,11 @@ def save(manager: Manager):
     with open(DEFAULT_DATA_FILE, "r") as f:
         data = json.load(f)
 
-    index = find_user(data['users'], manager.user.name)
-    if index != -1:
-        data['users'][index]['balance'] = manager.user.balance
+    if manager.user.data_index != -1:
+        data['users'][manager.user.data_index]['balance'] = manager.user.balance
         if manager.user.record:
             for i in manager.user.record:
-                data['users'][index]['record'].append(i)
+                data['users'][manager.user.data_index]['record'].append(i)
     data['isLocked'] = manager.locked
     with open(DEFAULT_DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)

@@ -1,5 +1,7 @@
 import sys
 
+from getpass import getpass
+
 from games import *
 from manage import login, logout, signup, save, unlock_machine
 from static_text import ROULETTE, DISCLAIMER, SELECT_MODE, LOCKED
@@ -35,7 +37,7 @@ def menu(manager: Manager):
             save(manager)
             sys.exit()
         else:
-            colored_print("ERROR(menu - logged in)", (255, 0, 0))
+            colored_print("Please Type Correctly", (255, 0, 0))
     else:
         print("1. Sign In")
         print("2. Create an Account")
@@ -50,7 +52,7 @@ def menu(manager: Manager):
         elif menu_num == "Q" or menu_num == "q":
             sys.exit()
         else:
-            colored_print("ERROR(menu - not logged in)", (255, 0, 0))
+            colored_print("Please Type Correctly", (255, 0, 0))
 
 
 def disclaimer(manager: Manager) -> bool:
@@ -96,12 +98,10 @@ def select_mode(manager: Manager):
             break
         else:
             pass
-            # colored_print("ERROR(select_mode)", (255, 0, 0))
 
 
 def master_key(manager: Manager) -> bool:
-    colored_print("? ", (0, 255, 0), end='')
-    password = input("Master Key: ")
+    password = getpass("Master Key: ")
     if MASTER_PASSWORD == password:
         unlock_machine(manager)
         return True
