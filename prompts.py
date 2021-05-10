@@ -2,7 +2,7 @@ import sys
 from getpass import getpass
 
 from games import *
-from statics import MASTER_PASSWORD, ROULETTE, DISCLAIMER, SELECT_MODE, LOCKED
+from static_data import MASTER_PASSWORD, ROULETTE, DISCLAIMER, SELECT_MODE, LOCKED
 from utility import *
 from manager import Manager, signup
 

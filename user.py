@@ -1,6 +1,6 @@
 import json
 
-from statics import DEFAULT_BALANCE, DEFAULT_DATA_FILE, RECORD
+from static_data import DEFAULT_BALANCE, DEFAULT_DATA_FILE, RECORD
 from utility import colored_print, change_background_color
 
 
@@ -17,6 +17,9 @@ class User:
     def is_affordable(self) -> bool:
         return self.balance >= 10
 
+    def is_valid_index(self) -> bool:
+        return self.data_index != -1
+
     def display_record(self):
         print(RECORD)
         print("Username: ", end='')
@@ -29,7 +32,7 @@ class User:
 
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
-            if self.data_index != -1:
+            if self.is_valid_index():
                 for i in data['users'][self.data_index]['record']:
                     display_list.append(i)
                     if i[2] == 'W':

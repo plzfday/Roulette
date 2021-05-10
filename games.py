@@ -1,7 +1,7 @@
 from random import randint
 
 from manager import Manager
-from statics import GUESS_WHAT, ODD_OR_EVEN, GUESS_RANGE
+from static_data import GUESS_WHAT, ODD_OR_EVEN, GUESS_RANGE
 from utility import *
 
 

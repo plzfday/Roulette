@@ -3,8 +3,8 @@ from datetime import datetime
 from getpass import getpass
 
 from hash import check_hash, hash_password
-from managedata import sort_name, find_user
-from statics import DEFAULT_DATA_FILE, DEFAULT_BALANCE, DEFAULT_BET, DEFAULT_JSON_FORMAT
+from data_manipulation import sort_name, find_user
+from static_data import DEFAULT_DATA_FILE, DEFAULT_BALANCE, DEFAULT_BET, DEFAULT_JSON_FORMAT
 from user import User
 from utility import colored_print
 
@@ -105,7 +105,7 @@ class Manager:
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
 
-        if self.user.data_index != -1:
+        if self.user.is_valid_index():
             data['users'][self.user.data_index]['balance'] = self.user.balance
             if self.user.record:
                 for i in self.user.record:
