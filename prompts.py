@@ -2,9 +2,9 @@ import sys
 from getpass import getpass
 
 from games import *
+from manager import Manager, signup
 from static_data import MASTER_PASSWORD, ROULETTE, DISCLAIMER, SELECT_MODE, LOCKED
 from utility import *
-from manager import Manager, signup
 
 
 def menu(manager: Manager):
@@ -70,7 +70,8 @@ def disclaimer(manager: Manager) -> bool:
     colored_print('Please type "AGREE" if you agree and want to continue.', (255, 0, 0))
     agreement = colored_input((255, 255, 0))
     if agreement != "AGREE":
-        system_notification("Since you didn't agree with this disclaimer, you're redirected to the main.", (66, 245, 212))
+        system_notification("Since you didn't agree with this disclaimer, you're redirected to the main.",
+                            (66, 245, 212))
         return False
     manager.agree = True
     return True

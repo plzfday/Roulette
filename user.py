@@ -14,6 +14,7 @@ class User:
         * record: a list of game record
         * data_index: an index value where the user is located at the 'data.json' file.
     """
+
     def __init__(self, name="", balance=DEFAULT_BALANCE, index=-1):
         self.name = name
         self.balance = balance

@@ -8,7 +8,7 @@ from utility import colored_input, system_notification
 def choose_one(manager: Manager):
     """
     Game Mode: Choose One (Within range of 1 to 36, choose one number)
-    Default bet: 10 pounds ; Guessing right, returns 360 pounds (total 350 pounds)
+    Default bet: 10 pounds ; Guessing right, returns 360 pounds
                              or just lose the bet (total -10 pounds)
     :param manager: an object that controls overall game circumstance
     :return: None
@@ -28,7 +28,7 @@ def choose_one(manager: Manager):
         guess = int(colored_input((0, 255, 0)))
     if random_num == guess:
         system_notification("Congratulations! You've got it right and earned £360.", (66, 245, 212))
-        manager.update_balance(35)
+        manager.update_balance(36)
         manager.log("Choose One", "W")
     else:
         system_notification("Unfortunately, you've got it wrong. You've lost £10.", (66, 245, 212))
@@ -39,7 +39,7 @@ def choose_one(manager: Manager):
 def odd_even(manager: Manager):
     """
     Game Mode: Odd or Even (Guess whether a number would be odd or even)
-    Default bet: 10 pounds ; Guessing right, returns 20 pounds (total 10 pounds)
+    Default bet: 10 pounds ; Guessing right, returns 20 pounds
                              or just lose the bet (total -10 pounds)
     :param manager: an object that controls overall game circumstance
     :return: None
@@ -56,7 +56,7 @@ def odd_even(manager: Manager):
 
     if (guess == "1" and random_num % 2 == 1) or (guess == "2" and random_num % 2 == 0):
         system_notification("Congratulations! You've got it right and earned £20.", (66, 245, 212))
-        manager.update_balance(1)
+        manager.update_balance(2)
         manager.log("Odd or Even", "W")
     else:
         system_notification("Unfortunately, you've got it wrong. You've lost £10.", (66, 245, 212))
@@ -67,7 +67,7 @@ def odd_even(manager: Manager):
 def up_down(manager: Manager):
     """
     Game Mode: Guess Range (Guess whether a number would be in between 1-18 or 19-36)
-    Default bet: 10 pounds ; Guessing right, returns 20 pounds (total 10 pounds)
+    Default bet: 10 pounds ; Guessing right, returns 20 pounds
                              or just lose the bet (total -10 pounds)
     :param manager: an object that controls overall game circumstance
     :return: None
@@ -84,7 +84,7 @@ def up_down(manager: Manager):
 
     if (guess == "1" and random_num <= 18) or (guess == "2" and 19 <= random_num):
         system_notification("Congratulations! You've got it right and earned £20.", (66, 245, 212))
-        manager.update_balance(1)
+        manager.update_balance(2)
         manager.log("Guess Range", "W")
     else:
         system_notification("Unfortunately, you've got it wrong. You've lost £10.", (66, 245, 212))

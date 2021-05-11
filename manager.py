@@ -65,6 +65,7 @@ class Manager:
         * agree: boolean value checking whether a user agreed on our disclaimer
         * locked: boolean value checking whether the machine is locked or not
     """
+
     def __init__(self, user=User()):
         self.user = user
         self.login_trial = 0
@@ -82,7 +83,6 @@ class Manager:
         User login
         :return: None
         """
-        # Login UI
         username = input("Username: ")
         password = getpass()
         # Find User
