@@ -1,4 +1,9 @@
 def sort_name(user_list):
+    """
+    Merge Sort a list with respect to alphabetical order of name
+    :param user_list: a list of user data from the 'data.json' file
+    :return: None
+    """
     if len(user_list) > 1:
         mid = len(user_list) // 2
         left = user_list[:mid]
@@ -28,7 +33,14 @@ def sort_name(user_list):
             k += 1
 
 
-def find_user(user_list, key) -> int:
+def find_user(user_list, key: str) -> int:
+    """
+    Binary search to find a given user's name within a list
+    :param user_list: a list of user data from the 'data.json' file
+    :param key: username
+    :return: if the user is found, returns an index (position) of the user in a list
+             otherwise returns -1
+    """
     low = 0
     high = len(user_list) - 1
 

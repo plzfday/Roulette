@@ -6,6 +6,13 @@ from utility import colored_input, system_notification
 
 
 def choose_one(manager: Manager):
+    """
+    Game Mode: Choose One (Within range of 1 to 36, choose one number)
+    Default bet: 10 pounds ; Guessing right, returns 360 pounds (total 350 pounds)
+                             or just lose the bet (total -10 pounds)
+    :param manager: an object that controls overall game circumstance
+    :return: None
+    """
     print(GUESS_WHAT)
     print(f"Bet Amount: £{DEFAULT_BET}")
     print("You can choose one number within the range of 1-36")
@@ -30,6 +37,13 @@ def choose_one(manager: Manager):
 
 
 def odd_even(manager: Manager):
+    """
+    Game Mode: Odd or Even (Guess whether a number would be odd or even)
+    Default bet: 10 pounds ; Guessing right, returns 20 pounds (total 10 pounds)
+                             or just lose the bet (total -10 pounds)
+    :param manager: an object that controls overall game circumstance
+    :return: None
+    """
     print(ODD_OR_EVEN)
     print(f"Bet Amount: £{DEFAULT_BET}")
     print("You can guess whether the number is odd or even")
@@ -51,6 +65,13 @@ def odd_even(manager: Manager):
 
 
 def up_down(manager: Manager):
+    """
+    Game Mode: Guess Range (Guess whether a number would be in between 1-18 or 19-36)
+    Default bet: 10 pounds ; Guessing right, returns 20 pounds (total 10 pounds)
+                             or just lose the bet (total -10 pounds)
+    :param manager: an object that controls overall game circumstance
+    :return: None
+    """
     print(GUESS_RANGE)
     print(f"Bet Amount: £{DEFAULT_BET}")
     print("You can guess whether the number is between 1-18 or 19-38")

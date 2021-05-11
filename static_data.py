@@ -1,3 +1,5 @@
+# Collection of all static data used in this project
+
 DEFAULT_BALANCE = 100
 DEFAULT_BET = 10
 DEFAULT_DATA_FILE = "data.json"

@@ -8,7 +8,12 @@ from manager import Manager, signup
 
 
 def menu(manager: Manager):
-    # Keyword: SUCCESS, FAILED 같은 걸 리턴하는 게 좋음
+    """
+    A prompt for the main interface
+    This shows two different screens as a user whether logged in or not
+    :param manager: an object that controls overall game circumstance
+    :return: None
+    """
     if manager.locked:
         colored_print(LOCKED + "\nPlease contact an administrator.", (255, 0, 0))
         if not master_key(manager):
@@ -53,6 +58,12 @@ def menu(manager: Manager):
 
 
 def disclaimer(manager: Manager) -> bool:
+    """
+    A prompt for disclaimer that a user might be more likely to lose money
+    :param manager: an object that controls overall game circumstance
+    :return: True, if a user typed "AGREE" correctly
+             False, otherwise
+    """
     colored_print(DISCLAIMER, (255, 0, 0))
     colored_print("You are more likely to lose your money and the odds are against you.", (255, 0, 0))
     colored_print("You must agree that you're taking a risk.", (255, 0, 0))
@@ -66,6 +77,11 @@ def disclaimer(manager: Manager) -> bool:
 
 
 def select_mode(manager: Manager):
+    """
+    A prompt for selecting a game mode
+    :param manager: an object that controls overall game circumstance
+    :return: None
+    """
     if not manager.agree and not disclaimer(manager):
         return
 
@@ -96,6 +112,12 @@ def select_mode(manager: Manager):
 
 
 def master_key(manager: Manager) -> bool:
+    """
+    A prompt for a user to enter the master key number in order to unlock the machine
+    :param manager: an object that controls overall game circumstance
+    :return: True, if a user types the correct master key number
+             False, otherwise
+    """
     password = getpass("Master Key: ")
     if MASTER_PASSWORD == password:
         manager.unlock_machine()

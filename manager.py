@@ -10,6 +10,10 @@ from utility import system_notification
 
 
 def signup():
+    """
+    Register a user
+    :return: None
+    """
     # Sign Up UI
     username = input("Username: ")
     try:
@@ -52,6 +56,15 @@ def signup():
 
 
 class Manager:
+    """
+    The manager that controls the current game situation and also tracks who the current user is.
+
+    These are variables controlled by the class:
+        * user: the current user
+        * login_trial: the number of login trial
+        * agree: boolean value checking whether a user agreed on our disclaimer
+        * locked: boolean value checking whether the machine is locked or not
+    """
     def __init__(self, user=User()):
         self.user = user
         self.login_trial = 0
@@ -65,6 +78,10 @@ class Manager:
             self.locked = False
 
     def login(self):
+        """
+        User login
+        :return: None
+        """
         # Login UI
         username = input("Username: ")
         password = getpass()
@@ -92,16 +109,29 @@ class Manager:
             system_notification("ERROR(login-file is unstable)", (255, 0, 0))
 
     def logout(self):
+        """
+        User logout
+        :return: None
+        """
         self.save()
         self.agree = False
         del self.user
         self.user = User()
 
     def update_balance(self, multiplier: int) -> int:
+        """
+        Update the current user's balance
+        :param multiplier: A scale factor of bet (if a game returns x36, 'multiplier' is 36)
+        :return: updated balance
+        """
         self.user.balance += DEFAULT_BET * multiplier
         return self.user.balance
 
     def save(self):
+        """
+        Save game data in the 'data.json' file
+        :return: None
+        """
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
 
@@ -115,6 +145,10 @@ class Manager:
             json.dump(data, f, indent=4)
 
     def lock_machine(self):
+        """
+        Lock the machine since the number of login trial exceeded the maximum (3)
+        :return: None
+        """
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
         self.locked = data['isLocked'] = True
@@ -122,6 +156,10 @@ class Manager:
             json.dump(data, f, indent=4)
 
     def unlock_machine(self):
+        """
+        Unlock the machine
+        :return: None
+        """
         with open(DEFAULT_DATA_FILE, "r") as f:
             data = json.load(f)
         self.locked = data['isLocked'] = False
@@ -129,6 +167,16 @@ class Manager:
         with open(DEFAULT_DATA_FILE, "w") as f:
             json.dump(data, f, indent=4)
 
-    def log(self, manager: str, outcome: str):
+    def log(self, game: str, outcome: str):
+        """
+        Log the result of a game to user's record list (not yet saved to the file)
+
+        Format: [Weekday Month Day H:M:S Year, Game Name, Result, Balance]
+        Example: [Mon May 10 15:32:15 2021, Guess Range, W, 120]
+
+        :param game: Name of the game
+        :param outcome: 'W' or 'L' (stand for win or lose)
+        :return: None
+        """
         current_time = datetime.now()
-        self.user.record.append([current_time.strftime("%c"), manager, outcome, self.user.balance])
+        self.user.record.append([current_time.strftime("%c"), game, outcome, self.user.balance])

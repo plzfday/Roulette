@@ -1,10 +1,19 @@
 import json
 
-from static_data import DEFAULT_BALANCE, DEFAULT_DATA_FILE, RECORD
+from static_data import DEFAULT_BALANCE, DEFAULT_DATA_FILE, DEFAULT_BET, RECORD
 from utility import colored_print, change_background_color
 
 
 class User:
+    """
+    Maintain the current logged-in user's information
+
+    These are variables controlled by the class:
+        * name: username
+        * balance: balance
+        * record: a list of game record
+        * data_index: an index value where the user is located at the 'data.json' file.
+    """
     def __init__(self, name="", balance=DEFAULT_BALANCE, index=-1):
         self.name = name
         self.balance = balance
@@ -12,15 +21,42 @@ class User:
         self.data_index = index
 
     def is_online(self) -> bool:
+        """
+        Check whether a user logged in or not
+        Returns True or False based on the User instance's situation
+        Because until a user log in, the User instance is an empty instance
+        :return: True, if the user is online
+                 False, otherwise
+        """
         return self.name != ""
 
     def is_affordable(self) -> bool:
-        return self.balance >= 10
+        """
+        Check whether a user has enough balance
+        Returns True or False based on the balance
+        :return: True, if the balance is enough to afford a bet
+                 False, otherwise
+        """
+        return self.balance >= DEFAULT_BET
 
     def is_valid_index(self) -> bool:
+        """
+        Check whether the 'data_index' is valid or not
+        :return: True, if the 'data_index' is valid
+                 False, otherwise
+        """
         return self.data_index != -1
 
     def display_record(self):
+        """
+        Display a record and state of a user
+        This prints:
+            - Username
+            - Balance
+            - Statistics (Total Game, # of Wins, # of Loses)
+            - Log (record)
+        :return: None
+        """
         print(RECORD)
         print("Username: ", end='')
         colored_print(self.name, (66, 245, 212))
