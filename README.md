@@ -1,6 +1,6 @@
 # Roulette
 
-16/04/2021 ~  
+16/04/2021 ~ 12/05/2021  
 Warwick IFP Summative Programming Project made by [@plzfday](https://github.com/plzfday)
 
 ## Object
